@@ -25,7 +25,7 @@ class apiAuthController extends Controller
             "date_of_birth" => "required|date",
             "gender" => "required|in:male,female",
             "role" => "required|in:admin,staff",
-            "address" => "required|min:50",
+            "address" => "required|min:10",
             "email" => "required|email|unique:users",
             "password" => "required|min:8|confirmed",
             "user_photo" => "url",
@@ -60,8 +60,17 @@ class apiAuthController extends Controller
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
                 "message" => "Username or password wrong",
-            ]);
+            ],401);
         }
+         // Retrieve the authenticated user
+    $user = Auth::user();
+
+    // Check if the user is banned
+    if ($user->status === "ban") {
+        return response()->json([
+            "message" => "Your account is banned.",
+        ], 403);
+    }
         $token = Auth::user()->createToken($request->has("device") ? $request->device : 'unknown')->plainTextToken;
         return response()->json([
             "message" => "Login successfully",
@@ -117,6 +126,7 @@ class apiAuthController extends Controller
 
     public function changePassword(Request $request)
     {
+        // dd($request);
         $user = Auth::user();
 
         $request->validate([

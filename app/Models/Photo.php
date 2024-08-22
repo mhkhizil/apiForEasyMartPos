@@ -10,4 +10,8 @@ class Photo extends Model
     use HasFactory;
 
     protected $fillable = ["url","name",'ext',"user_id","file_size"];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

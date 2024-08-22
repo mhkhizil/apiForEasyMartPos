@@ -21,10 +21,20 @@ class UserSeeder extends Seeder
             "address" => "this is address and address",
             "date_of_birth" => "1/12/2000",
             "gender" => "female",
-            "email" => "tth11223344@gmail.com",
+            "email" => "trz@gmail.com",
             "password" => Hash::make("11223344"),
             "role" => "admin"
-        ]);
+        ],);
+        User::factory()->create([
+            "name" => "Min MIn",
+            "phone" => "0992330445",
+            "address" => "this is address and address",
+            "date_of_birth" => "1/12/2000",
+            "gender" => "male",
+            "email" => "trz123@gmail.com",
+            "password" => Hash::make("11223344"),
+            "role" => "staff"
+        ],);
         User::factory(10)->create();
     }
 }

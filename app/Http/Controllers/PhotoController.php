@@ -15,10 +15,15 @@ class PhotoController extends Controller
      */
     public function index()
     {
-        $photos = Photo::when(Auth::user()->role !== 'admin', function ($query) {
+        $isAdmin = Auth::user()->role === 'admin';
+        $photos = Photo::when(!$isAdmin, function ($query) {
             $query->where("user_id", Auth::id());
-        })->latest("id")->paginate(10)->withQueryString();
-        return response()->json($photos);
+        })->with('user:id,name')->latest("id")->paginate(100)->withQueryString();
+        $photosArray = $photos->toArray();
+
+        // Add the is_admin flag
+        $photosArray['is_admin'] = $isAdmin;
+        return response()->json($photosArray);
     }
 
     /**
