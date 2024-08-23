@@ -96,6 +96,7 @@ class ProductController extends Controller
         $product->actual_price = $request->actual_price ?? $product->actual_price;
         $product->sale_price = $request->sale_price ?? $product->sale_price;
         $product->unit = $request->unit ?? $product->unit;
+        $product->photo = $request->photo ?? $product->photo;
         $product->more_information = $request->more_information ?? $product->more_information;
         $product->update();
         return response()->json(["message" => "product has been updated successfully"]);
