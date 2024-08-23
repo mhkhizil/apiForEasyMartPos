@@ -255,7 +255,7 @@ class SaleRecordSeeder extends Seeder
                         ];
                     };
 
-                    $date = Carbon::create(2023, 10, $d)->setTime(rand(9, 16), rand(0, 59), rand(0, 59));
+                    $date = Carbon::create(2024, 8, $d)->setTime(rand(9, 16), rand(0, 59), rand(0, 59));
                     $total = 0;
                     foreach ($voucher_records as $record) {
                         $total += $record["quantity"] * $record["price"];
@@ -309,7 +309,7 @@ class SaleRecordSeeder extends Seeder
                     "status" => "daily",
                     "user_id" => rand(1, 10),
                     "created_at" => $date,
-                    "updated_at" => $date,
+                    "updated_at" => $date
                 ]);
 
                 $vouchers = [];
@@ -318,7 +318,7 @@ class SaleRecordSeeder extends Seeder
 
         // firstYear();
         yearSeeding(2023, 12);
-        yearSeeding(2024, 8);
+        yearSeeding(2024, Carbon::now()->month - 1);
         currentMonth();
     }
 }
