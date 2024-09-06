@@ -74,6 +74,10 @@ class StockOverviewController extends Controller
 
         foreach ($productQuantity as $item) {
             $product = Product::find($item->product_id);
+               // Check if the product exists
+        if (!$product) {
+            continue; // Skip this product if it doesn't exist
+        }
             $brandId = $product->brand_id;
             $brandName = Brand::find($brandId)->name;
 
