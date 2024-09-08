@@ -73,7 +73,7 @@ class StockOverviewController extends Controller
         $bestSellerBrands = [];
 
         foreach ($productQuantity as $item) {
-            $product = Product::find($item->product_id);
+            $product = Product::withTrashed()->find($item->product_id);
                // Check if the product exists
         if (!$product) {
             continue; // Skip this product if it doesn't exist

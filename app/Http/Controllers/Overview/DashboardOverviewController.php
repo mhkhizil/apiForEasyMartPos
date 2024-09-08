@@ -83,6 +83,8 @@ class DashboardOverviewController extends Controller
         return User::where("id", "!=", 1)->count();
     }
 
+
+    //product table nk nyi dl
     private function getFinancialStats($startDate, $endDate)
     {
         $voucherRecords = VoucherRecord::whereBetween("created_at", [$startDate, $endDate])
@@ -94,7 +96,7 @@ class DashboardOverviewController extends Controller
         $totalExpense = 0;
 
         foreach ($voucherRecords as $record) {
-            $product = Product::find($record->product_id);
+            $product = Product::withTrashed()->find($record->product_id);
             $totalExpense += $product->actual_price * $record->total_quantity;
         }
 

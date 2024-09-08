@@ -92,11 +92,13 @@ class SaleOverviewController extends Controller
             ->select("total_net_total", "created_at")
             ->first();
     }
-
+// dmhr nyi
     private function getTopProductSales($dates)
     {
         $product_sales = VoucherRecord::whereBetween("created_at", $dates)
-            ->with('product.brand') // Eager load relationships
+            ->with(['product' => function ($query) {
+                $query->withTrashed()->with('brand'); 
+            }]) // Eager load relationships
             ->select('product_id', DB::raw('SUM(quantity) as total_quantity'))
             ->groupBy('product_id')
             ->orderByDesc("total_quantity")
