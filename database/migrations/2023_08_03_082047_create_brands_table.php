@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string("agent");
             $table->string("phone");
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

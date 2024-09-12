@@ -28,7 +28,7 @@ class StoreProductRequest extends FormRequest
             "sale_price" => "required|numeric|min:100",
             // "total_stock" => "required",
             "unit" => "required",
-            "more_information" => "min:50",
+            "more_information" => "min:10",
             "photo" => "required"
         ];
     }

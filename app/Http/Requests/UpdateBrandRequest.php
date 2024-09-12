@@ -24,7 +24,7 @@ class UpdateBrandRequest extends FormRequest
         return [
             "name" => "min:2|max:50",
             "company" => "min:4|max:50",
-            "information" => "min:50",
+            "information" => "min:10",
             "phone" => "numeric",
             "agent" => "min:3",
         ];

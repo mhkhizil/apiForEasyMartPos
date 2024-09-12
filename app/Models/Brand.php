@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Brand extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = ["name", "company", "information", "user_id", "photo", "agent", "phone"];
 
@@ -24,5 +25,14 @@ class Brand extends Model
     public function voucherRecords()
     {
         return $this->hasManyThrough(VoucherRecord::class, Product::class);
+    }
+    protected static function booted()
+    {
+        static::deleting(function ($brand) {
+
+
+                $brand->products()->delete(); // Soft delete related products
+
+        });
     }
 }

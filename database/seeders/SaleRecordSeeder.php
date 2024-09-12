@@ -319,6 +319,6 @@ class SaleRecordSeeder extends Seeder
         // firstYear();
         yearSeeding(2023, 12);
         yearSeeding(2024, Carbon::now()->month - 1);
-        currentMonth();
+        // currentMonth();
     }
 }

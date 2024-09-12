@@ -79,7 +79,7 @@ class StockOverviewController extends Controller
             continue; // Skip this product if it doesn't exist
         }
             $brandId = $product->brand_id;
-            $brandName = Brand::find($brandId)->name;
+            $brandName = Brand::withTrashed()->find($brandId)->name;
 
             if (isset($bestSellerBrands[$brandId])) {
                 $bestSellerBrands[$brandId]["total_quantity"] += $item->total_quantity;

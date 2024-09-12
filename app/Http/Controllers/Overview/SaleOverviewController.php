@@ -20,7 +20,7 @@ class SaleOverviewController extends Controller
 
 
         $query = SaleRecord::whereBetween("created_at", $dates)->where("status", $status)->distinct();
-        // dd($query);
+         //dd($query);
         $query2 = SaleRecord::whereBetween("created_at", $dates)->where("status", $status)->distinct();
 
         $average = $query->avg("total_net_total");
@@ -29,7 +29,7 @@ class SaleOverviewController extends Controller
             return response()->json(["message" => "There is no data"]);
         }
         $records = $query->select("total_net_total", "created_at")->get();
-        // dd($records);
+        //dd($records);
         $max = $this->getMinMaxRecord($query, 'max');
         $min = $this->getMinMaxRecord($query2, 'min');
         $maxValue = $max['total_net_total'];
@@ -97,7 +97,9 @@ class SaleOverviewController extends Controller
     {
         $product_sales = VoucherRecord::whereBetween("created_at", $dates)
             ->with(['product' => function ($query) {
-                $query->withTrashed()->with('brand'); 
+                $query->withTrashed()->with(['brand' => function ($query) {
+                    $query->withTrashed(); // Include deleted brands
+                }]);
             }]) // Eager load relationships
             ->select('product_id', DB::raw('SUM(quantity) as total_quantity'))
             ->groupBy('product_id')
@@ -117,14 +119,24 @@ class SaleOverviewController extends Controller
 
     private function getBestSellerBrands($dates)
     {
-        $brands = Brand::with(['voucherRecords' => function ($query) use ($dates) {
-            $query->whereBetween('voucher_records.created_at', $dates);
+        // $brands = Brand::withTrashed()->with(['voucherRecords' => function ($query) use ($dates) {
+        //     $query->whereBetween('voucher_records.created_at', $dates);
+        // }])->get();
+
+        $brands = Brand::withTrashed()->with(['voucherRecords' => function ($query) use ($dates) {
+            // Include soft-deleted products in the query
+            $query->with(['product' => function ($productQuery) {
+                $productQuery->withTrashed();
+            }])->whereBetween('voucher_records.created_at', $dates);
         }])->get();
 
+
+//  dd($brands);
         // Calculate total quantity for each brand
         $bestSellerBrands = [];
         foreach ($brands as $brand) {
             $totalQuantity = $brand->voucherRecords->sum('quantity');
+            //  logger($brand->voucherRecords);
             $bestSellerBrands[] = [
                 "brand_id" => $brand->id,
                 "brand_name" => $brand->name,
@@ -138,10 +150,13 @@ class SaleOverviewController extends Controller
         });
 
         $top5Brands = array_slice($bestSellerBrands, 0, 5);
+
         $totalQuantity = array_sum(array_column($top5Brands, 'total_quantity'));
+        if ($totalQuantity > 0) {
         return array_map(function ($brand) use ($totalQuantity) {
             $brand["percentage"] = round($brand["total_quantity"] / $totalQuantity * 100, 1) . "%";
             return $brand;
         }, $top5Brands);
+    }
     }
 }
