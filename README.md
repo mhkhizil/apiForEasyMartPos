@@ -99,7 +99,7 @@ __Get Single User__ `GET`
  http://127.0.0.1:8000/api/v1/users/{id}
 ```
 
-__User Update__ `PUT/PATCH`
+<!--__User Update__ `PUT/PATCH`
 
 ```
  http://127.0.0.1:8000/api/v1/users/{id}
@@ -123,7 +123,7 @@ __User Delete__ `DELETE`
 ```
  http://127.0.0.1:8000/api/v1/users/{id}
 ```
-
+-->
 __Ban User__ `PATCH`
 
 ```
